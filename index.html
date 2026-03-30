@@ -32,8 +32,9 @@ const SUPA_BUCKET = "kml-files";
 // ━━━ Upload KML to Supabase Storage ━━━
 async function uploadKmlToSupabase(file, hlbNo) {
   const path = `hlb_${String(hlbNo).padStart(3,'0')}/${Date.now()}_${file.name}`;
-  const res  = await fetch(`${SUPA_URL}/storage/v1/object/${SUPA_BUCKET}/${path}`, {
-    method:  'POST',
+  // PUT with x-upsert:true is the correct Supabase Storage upload method
+  let res = await fetch(`${SUPA_URL}/storage/v1/object/${SUPA_BUCKET}/${path}`, {
+    method:  'PUT',
     headers: {
       'Authorization': `Bearer ${SUPA_KEY}`,
       'Content-Type':  'application/octet-stream',
@@ -41,7 +42,22 @@ async function uploadKmlToSupabase(file, hlbNo) {
     },
     body: file,
   });
-  if(!res.ok) throw new Error(`Supabase upload failed: ${res.status} ${await res.text()}`);
+  // Fallback to POST if server rejects PUT
+  if(!res.ok && (res.status === 405 || res.status === 404)) {
+    res = await fetch(`${SUPA_URL}/storage/v1/object/${SUPA_BUCKET}/${path}`, {
+      method:  'POST',
+      headers: {
+        'Authorization': `Bearer ${SUPA_KEY}`,
+        'Content-Type':  'application/octet-stream',
+        'x-upsert':      'true',
+      },
+      body: file,
+    });
+  }
+  if(!res.ok) {
+    const errText = await res.text();
+    throw new Error(`KML upload failed (${res.status}): ${errText}`);
+  }
   // Public URL
   const publicUrl = `${SUPA_URL}/storage/v1/object/public/${SUPA_BUCKET}/${path}`;
   return { publicUrl, path };
