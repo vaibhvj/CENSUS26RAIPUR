@@ -248,6 +248,18 @@ select.filter-sel:focus{outline:none;border-color:var(--navy-lt);}
 .entry-card.has-error{border-color:var(--red-err);}
 .entry-card.is-complete{border-left:4px solid var(--mint);}
 
+.dd-section-label{font-size:.68rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.6px;padding:8px 16px 4px;font-family:'Rajdhani',sans-serif;background:#F8FAFD;border-bottom:1px solid var(--border);}
+.excel-split{position:relative;display:inline-flex;}
+.excel-split .btn-excel-main{border-radius:8px 0 0 8px;border-right:1px solid rgba(255,255,255,.3);}
+.excel-split .btn-excel-arrow{border-radius:0 8px 8px 0;padding:9px 11px;min-width:0;}
+.excel-dropdown{position:absolute;top:calc(100% + 6px);right:0;background:#fff;border:1.5px solid var(--border);border-radius:10px;box-shadow:var(--shadow-md);min-width:210px;z-index:200;display:none;overflow:hidden;}
+.excel-dropdown.open{display:block;}
+.excel-dd-item{display:flex;align-items:center;gap:10px;padding:11px 16px;font-size:.87rem;font-family:'Noto Sans Devanagari',sans-serif;color:var(--text-main);cursor:pointer;border-bottom:1px solid var(--border);transition:background .15s;}
+.excel-dd-item:last-child{border-bottom:none;}
+.excel-dd-item:hover{background:#F5F8FF;}
+.excel-dd-item .dd-icon{font-size:1.1rem;width:22px;text-align:center;}
+.excel-dd-item .dd-label{flex:1;font-weight:600;}
+.excel-dd-item .dd-sub{font-size:.72rem;color:var(--text-muted);display:block;font-weight:400;}
 .card-header{background:linear-gradient(90deg,#F5F8FF,#FAFCFF);padding:14px 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;border-bottom:1px solid var(--border);cursor:pointer;user-select:none;}
 .card-header:hover{background:linear-gradient(90deg,#EEF2FF,#F5F8FF);}
 .hlb-badge{background:var(--navy);color:#FFF;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:.9rem;padding:4px 12px;border-radius:6px;flex-shrink:0;}
@@ -617,35 +629,59 @@ pre#json-output{font-family:'IBM Plex Mono',monospace;font-size:.78rem;line-heig
   </div>
   <button class="btn btn-primary" onclick="expandAll()">⬇ Expand All</button>
   <button class="btn btn-outline" onclick="collapseAll()">⬆ Collapse All</button>
-  <button class="btn btn-success" onclick="downloadJSON()">💾 Download JSON</button>
-  <button class="btn btn-excel" onclick="downloadExcel()">📊 Download Excel</button>
-</div>
+  <div class="excel-split" id="excelSplit1">
+    <button class="btn btn-excel btn-excel-main" onclick="toggleExcelDD('excelSplit1')">⬇ Download ▾</button>
+    <div class="excel-dropdown" id="excelSplit1-dd">
+      <div class="dd-section-label">📊 CSV / Excel</div>
+      <div class="excel-dd-item" onclick="downloadExcel('complete');closeExcelDDs()">
+        <span class="dd-icon">✅</span>
+        <span class="dd-label">CSV — Complete List<span class="dd-sub">सभी पूर्ण entries</span></span>
+      </div>
+      <div class="excel-dd-item" onclick="downloadExcel('pending');closeExcelDDs()">
+        <span class="dd-icon">⏳</span>
+        <span class="dd-label">CSV — Pending List<span class="dd-sub">अधूरी entries — KML/Landmark missing</span></span>
+      </div>
+      <div class="dd-section-label">🖨️ PDF / Print</div>
+      <div class="excel-dd-item" onclick="downloadBulkPDF('complete');closeExcelDDs()">
+        <span class="dd-icon">✅</span>
+        <span class="dd-label">PDF — Complete List<span class="dd-sub">सभी पूर्ण entries का PDF</span></span>
+      </div>
+      <div class="excel-dd-item" onclick="downloadBulkPDF('pending');closeExcelDDs()">
+        <span class="dd-icon">⏳</span>
+        <span class="dd-label">PDF — Pending List<span class="dd-sub">अधूरी entries का PDF</span></span>
+      </div>
+    </div>
+  </div>
 
 <div class="main-wrap">
   <div class="submit-panel">
-    <span class="panel-title">📋 HLB Entry Form — Batch Submission (354 Entries)</span>
-    <button class="btn btn-accent" onclick="submitAll()">📤 Submit &amp; Preview JSON</button>
-    <button class="btn btn-success" onclick="downloadJSON()">💾 Download JSON</button>
-    <button class="btn btn-excel" onclick="downloadExcel()">📊 Download Excel</button>
+    <span class="panel-title">📋 HLB Entry Form — Raipur तहसील (002) · कुल 354 Entries</span>
+    <div class="excel-split" id="excelSplit2">
+      <button class="btn btn-excel btn-excel-main" onclick="toggleExcelDD('excelSplit2')">⬇ Download ▾</button>
+      <div class="excel-dropdown" id="excelSplit2-dd">
+        <div class="dd-section-label">📊 CSV / Excel</div>
+        <div class="excel-dd-item" onclick="downloadExcel('complete');closeExcelDDs()">
+          <span class="dd-icon">✅</span>
+          <span class="dd-label">CSV — Complete List<span class="dd-sub">सभी पूर्ण entries</span></span>
+        </div>
+        <div class="excel-dd-item" onclick="downloadExcel('pending');closeExcelDDs()">
+          <span class="dd-icon">⏳</span>
+          <span class="dd-label">CSV — Pending List<span class="dd-sub">अधूरी entries — KML/Landmark missing</span></span>
+        </div>
+        <div class="dd-section-label">🖨️ PDF / Print</div>
+        <div class="excel-dd-item" onclick="downloadBulkPDF('complete');closeExcelDDs()">
+          <span class="dd-icon">✅</span>
+          <span class="dd-label">PDF — Complete List<span class="dd-sub">सभी पूर्ण entries का PDF</span></span>
+        </div>
+        <div class="excel-dd-item" onclick="downloadBulkPDF('pending');closeExcelDDs()">
+          <span class="dd-icon">⏳</span>
+          <span class="dd-label">PDF — Pending List<span class="dd-sub">अधूरी entries का PDF</span></span>
+        </div>
+      </div>
+    </div>
   </div>
   <div id="cardContainer"></div>
   <div class="pagination" id="paginationWrap"></div>
-</div>
-
-<div class="modal-backdrop" id="jsonModal">
-  <div class="modal-box">
-    <div class="modal-header">
-      <span>📄</span>
-      <h2>Submitted Data — JSON Preview</h2>
-      <button class="modal-close" onclick="closeModal()">✕</button>
-    </div>
-    <div class="modal-body"><pre id="json-output"></pre></div>
-    <div class="modal-footer">
-      <button class="btn btn-outline" onclick="copyJSON()">📋 Copy JSON</button>
-      <button class="btn btn-success" onclick="downloadJSON()">💾 Download JSON</button>
-      <button class="btn btn-primary" onclick="closeModal()">Close</button>
-    </div>
-  </div>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -980,24 +1016,6 @@ function buildPayload() {
   }));
 }
 
-function submitAll() {
-  const payload=buildPayload();
-  document.getElementById('json-output').textContent=JSON.stringify(payload,null,2);
-  document.getElementById('jsonModal').classList.add('open');
-}
-function closeModal(){ document.getElementById('jsonModal').classList.remove('open'); }
-function copyJSON(){
-  navigator.clipboard.writeText(document.getElementById('json-output').textContent)
-    .then(()=>showToast('📋 JSON copied!','success'));
-}
-function downloadJSON(){
-  const blob=new Blob([JSON.stringify(buildPayload(),null,2)],{type:'application/json'});
-  const url=URL.createObjectURL(blob), a=document.createElement('a');
-  a.href=url; a.download=`HLB_Census_Raipur_${new Date().toISOString().slice(0,10)}.json`;
-  a.click(); URL.revokeObjectURL(url);
-  showToast('💾 JSON downloaded!','success');
-}
-
 function renderPagination() {
   const wrap=document.getElementById('paginationWrap');
   const total=state.filtered.length, pages=Math.ceil(total/state.pageSize);
@@ -1259,9 +1277,52 @@ function renderSavedSummary(idx, d, kmlFileName, kmlPublicUrl, savedDate) {
 
 window.renderSavedSummary = renderSavedSummary;
 
-function downloadExcel() {
+function toggleExcelDD(splitId) {
+  const dd = document.getElementById(splitId + '-dd');
+  const isOpen = dd.classList.contains('open');
+  closeExcelDDs();
+  if(!isOpen) dd.classList.add('open');
+}
+function closeExcelDDs() {
+  document.querySelectorAll('.excel-dropdown').forEach(d => d.classList.remove('open'));
+}
+document.addEventListener('click', e => {
+  if(!e.target.closest('.excel-split')) closeExcelDDs();
+});
+
+function downloadExcel(mode = 'complete') {
   syncDOMToState();
-  const rows = buildPayload();
+  const allRows = buildPayload();
+  const date = new Date().toISOString().slice(0,10);
+
+  let rows = allRows.map((r, i) => {
+    const d = state.data[i];
+    const hasKml = !!(state.kmlFiles[i] || (d.kmlPublicUrl && d.kmlFileName));
+    const complete = !!(d.landmark.trim() && hasKml);
+    return { ...r, _complete: complete, _idx: i };
+  });
+
+  if(mode === 'complete') {
+    rows = rows.filter(r => r._complete);
+    if(!rows.length){ showToast('⚠️ कोई भी entry अभी complete नहीं है।','error'); return; }
+  } else if(mode === 'pending') {
+    rows = rows.filter(r => !r._complete);
+    if(!rows.length){ showToast('🎉 सभी entries complete हैं! कोई pending नहीं।','success'); return; }
+  }
+
+  // Add Missing Fields column for pending
+  rows = rows.map(r => {
+    const d = state.data[r._idx];
+    const hasKml = !!(state.kmlFiles[r._idx] || (d.kmlPublicUrl && d.kmlFileName));
+    const missing = [];
+    if(!d.landmark.trim()) missing.push('Landmark');
+    if(!hasKml) missing.push('KML File');
+    const out = { ...r };
+    delete out._complete; delete out._idx;
+    if(mode === 'pending') out['Missing Fields'] = missing.join(', ');
+    return out;
+  });
+
   const headers = Object.keys(rows[0]);
   const csv = [headers.join(','), ...rows.map(r=>headers.map(h=>{
     const v = r[h]===null||r[h]===undefined?'':String(r[h]);
@@ -1269,10 +1330,129 @@ function downloadExcel() {
   }).join(','))].join('\n');
   const bom = '\uFEFF';
   const blob = new Blob([bom+csv],{type:'text/csv;charset=utf-8;'});
-  const url  = URL.createObjectURL(blob), a = document.createElement('a');
-  a.href=url; a.download=`HLB_Census_Raipur_${new Date().toISOString().slice(0,10)}.csv`;
+  const url = URL.createObjectURL(blob), a = document.createElement('a');
+  a.href = url;
+  a.download = mode === 'pending'
+    ? `HLB_Pending_List_Raipur_${date}.csv`
+    : `HLB_Complete_List_Raipur_${date}.csv`;
   a.click(); URL.revokeObjectURL(url);
-  showToast('📊 Excel/CSV downloaded!','success');
+  showToast(
+    mode === 'pending'
+      ? `⏳ ${rows.length} pending entries की CSV download हुई!`
+      : `✅ ${rows.length} complete entries की CSV download हुई!`,
+    'success'
+  );
+}
+
+function downloadBulkPDF(mode) {
+  syncDOMToState();
+  const date = new Date().toISOString().slice(0,10);
+  const entries = state.data.map((d, i) => {
+    const hasKml = !!(state.kmlFiles[i] || (d.kmlPublicUrl && d.kmlFileName));
+    const complete = !!(d.landmark.trim() && hasKml);
+    return { d, i, complete };
+  }).filter(e => mode === 'complete' ? e.complete : !e.complete);
+
+  if(!entries.length) {
+    showToast(
+      mode === 'complete' ? '⚠️ कोई complete entry नहीं है।' : '🎉 सभी entries complete! Pending नहीं।',
+      mode === 'complete' ? 'error' : 'success'
+    );
+    return;
+  }
+
+  const now = new Date().toLocaleString('hi-IN');
+  const title = mode === 'complete' ? 'Complete Entries List' : 'Pending Entries List';
+  const titleHi = mode === 'complete' ? 'पूर्ण एंट्री सूची' : 'अपूर्ण एंट्री सूची';
+
+  const tableRows = entries.map(({d, i}) => {
+    const hasKml = !!(state.kmlFiles[i] || (d.kmlPublicUrl && d.kmlFileName));
+    const kmlName = state.kmlFiles[i] ? state.kmlFiles[i].name : (d.kmlFileName || '—');
+    const missing = [];
+    if(!d.landmark.trim()) missing.push('Landmark');
+    if(!hasKml) missing.push('KML File');
+    return `<tr>
+      <td>${d.srNo}</td>
+      <td><strong>HLB ${d.hlbNo}</strong></td>
+      <td>${d.village}</td>
+      <td>${d.vernacularName}</td>
+      <td>${d.gpName}</td>
+      <td>${d.landmark || '<span style="color:#c0392b;">—</span>'}</td>
+      <td>${kmlName}</td>
+      ${mode==='pending'?`<td style="color:#e74c3c;font-weight:600;">${missing.join(', ')}</td>`:''}
+    </tr>`;
+  }).join('');
+
+  const html = `<!DOCTYPE html><html lang="hi"><head><meta charset="UTF-8"/>
+<title>HLB ${title} — Raipur</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;600;700&family=Rajdhani:wght@600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Noto Sans Devanagari',Arial,sans-serif;background:#fff;color:#1a1a2e;font-size:12px;padding:28px 32px;}
+.page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;padding-bottom:12px;border-bottom:3px solid #0D2B55;}
+.org-title{font-family:'Rajdhani',sans-serif;font-size:18px;font-weight:700;color:#0D2B55;}
+.org-sub{font-size:10px;color:#5C6B8A;margin-top:2px;}
+.badge{display:inline-block;padding:3px 12px;border-radius:4px;font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:700;letter-spacing:.5px;margin-top:5px;}
+.badge-complete{background:#00C48C;color:#fff;}
+.badge-pending{background:#FF6B00;color:#fff;}
+.meta{font-family:'IBM Plex Mono',monospace;font-size:9px;color:#5C6B8A;text-align:right;line-height:1.7;}
+h2{font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:700;color:#0D2B55;margin:14px 0 10px;}
+table{width:100%;border-collapse:collapse;font-size:11px;}
+thead tr{background:#0D2B55;color:#fff;}
+thead th{padding:8px 10px;text-align:left;font-family:'Rajdhani',sans-serif;font-size:11px;letter-spacing:.3px;}
+tbody tr:nth-child(even){background:#F5F8FF;}
+tbody tr:hover{background:#EEF2FF;}
+td{padding:7px 10px;border-bottom:1px solid #DDE3EF;vertical-align:top;}
+.footer{margin-top:24px;padding-top:10px;border-top:2px solid #DDE3EF;display:flex;justify-content:space-between;font-size:9px;color:#5C6B8A;}
+.summary-bar{display:flex;gap:16px;margin-bottom:14px;}
+.sum-chip{background:#F5F8FF;border:1.5px solid #DDE3EF;border-radius:7px;padding:7px 16px;text-align:center;}
+.sum-chip .num{font-family:'Rajdhani',sans-serif;font-size:18px;font-weight:700;color:#0D2B55;line-height:1;}
+.sum-chip .lbl{font-size:9px;color:#5C6B8A;font-family:'IBM Plex Mono',monospace;text-transform:uppercase;}
+.watermark{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-35deg);font-family:'Rajdhani',sans-serif;font-size:80px;font-weight:700;color:rgba(13,43,85,.04);pointer-events:none;white-space:nowrap;z-index:-1;}
+@media print{body{padding:14px 18px;}@page{size:A4 landscape;margin:.7cm;}}
+</style></head><body>
+<div class="watermark">CENSUS 2027</div>
+<div class="page-header">
+  <div>
+    <div class="org-title">🏛️ Census Department — Raipur (Beawar)</div>
+    <div class="org-sub">जनगणना विभाग · रायपुर तहसील (002) · ब्यावर · राजस्थान</div>
+    <span class="badge badge-${mode}">${titleHi} — HLB ${title}</span>
+  </div>
+  <div class="meta">
+    <div>दिनांक: ${now}</div>
+    <div>Total entries: ${entries.length}</div>
+    <div>Census of India 2027</div>
+  </div>
+</div>
+<div class="summary-bar">
+  <div class="sum-chip"><div class="num">${state.data.length}</div><div class="lbl">Total HLBs</div></div>
+  <div class="sum-chip"><div class="num">${entries.length}</div><div class="lbl">${mode==='complete'?'Complete':'Pending'}</div></div>
+  <div class="sum-chip"><div class="num">${state.data.length - entries.length}</div><div class="lbl">${mode==='complete'?'Pending':'Complete'}</div></div>
+</div>
+<h2>📋 ${titleHi} (${entries.length} entries)</h2>
+<table>
+  <thead><tr>
+    <th>SR</th><th>HLB No.</th><th>Village / Ward</th><th>Vernacular</th><th>Gram Panchayat</th><th>Landmark</th><th>KML File</th>
+    ${mode==='pending'?'<th>Missing Fields</th>':''}
+  </tr></thead>
+  <tbody>${tableRows}</tbody>
+</table>
+<div class="footer">
+  <div>Census of India 2027 · CMMS · रायपुर तहसील (002)</div>
+  <div>Designed &amp; Maintained by <strong>Vaibhav Vijay</strong></div>
+</div>
+</body></html>`;
+
+  const w = window.open('','_blank','width=1100,height=780');
+  w.document.write(html);
+  w.document.close();
+  setTimeout(()=>{ w.print(); }, 800);
+  showToast(
+    mode==='pending'
+      ? `⏳ ${entries.length} pending entries का PDF print window खुला!`
+      : `✅ ${entries.length} complete entries का PDF print window खुला!`,
+    'success'
+  );
 }
 
 function downloadKML(idx) {
@@ -1321,7 +1501,6 @@ function downloadKML(idx) {
 function openGuidelines(){ document.getElementById('guidelinesModal').classList.add('open'); }
 function closeGuidelines(){ document.getElementById('guidelinesModal').classList.remove('open'); }
 
-document.getElementById('jsonModal').addEventListener('click',function(e){if(e.target===this)closeModal();});
 document.getElementById('guidelinesModal').addEventListener('click',function(e){if(e.target===this)closeGuidelines();});
 </script>
 
